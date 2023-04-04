@@ -43,16 +43,10 @@
                         </Label>
                         <RadioButton fx:id="radioSN" layoutX="14.0" layoutY="131.0" mnemonicParsing="false" onAction="#radioAction" text="Serial Number">
                            <toggleGroup>
-                              <ToggleGroup />
-                           </toggleGroup></RadioButton>
-                        <RadioButton fx:id="radioType" layoutX="218.0" layoutY="131.0" mnemonicParsing="false" onAction="#radioAction" text="Type">
-                           <toggleGroup>
-                              <ToggleGroup />
-                           </toggleGroup></RadioButton>
-                        <RadioButton fx:id="radioName" layoutX="130.0" layoutY="131.0" mnemonicParsing="false" onAction="#radioAction" text="Name">
-                           <toggleGroup>
                               <ToggleGroup fx:id="searchInv" />
                            </toggleGroup></RadioButton>
+                        <RadioButton fx:id="radioType" layoutX="218.0" layoutY="131.0" mnemonicParsing="false" onAction="#radioAction" text="Type" toggleGroup="$searchInv" />
+                        <RadioButton fx:id="radioName" layoutX="130.0" layoutY="131.0" mnemonicParsing="false" onAction="#radioAction" text="Name" toggleGroup="$searchInv" />
                         <Button fx:id="btnSearch" layoutX="15.0" layoutY="428.0" mnemonicParsing="false" onAction="#btnHandler" text="Search">
                            <padding>
                               <Insets bottom="5.0" left="30.0" right="30.0" top="5.0" />
@@ -67,7 +61,7 @@
                         <Label fx:id="snLabel" layoutX="15.0" layoutY="212.0" text="Serial Number (SN)" />
                         <TextField fx:id="textSN" layoutX="130.0" layoutY="208.0" onAction="#txtSearchHandler" promptText="Enter SN Here" />
                         <Label fx:id="nameLabel" layoutX="15.0" layoutY="252.0" text="Name" />
-                        <Label fx:id="typeName" layoutX="18.0" layoutY="293.0" text="Type" />
+                        <Label fx:id="typeLabel" layoutX="18.0" layoutY="293.0" text="Type" />
                         <TextField fx:id="textName" layoutX="130.0" layoutY="248.0" onAction="#txtSearchHandler" promptText="Enter Name Here" />
                         <TextField fx:id="textType" layoutX="130.0" layoutY="289.0" onAction="#txtSearchHandler" promptText="Enter Type Here" />
                      </children>

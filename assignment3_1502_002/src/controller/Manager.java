@@ -69,6 +69,7 @@ public class Manager {
 
     @FXML
     private TextField textSN;
+    
 
     @FXML
     private TextField textType;
@@ -109,8 +110,8 @@ void btnHandler(ActionEvent event) {
 						count -=1 ;
 						item.setAvalibleCount(count);
 						}
-
 				}
+				saveExit();
 			}
 			//send to SN search
 		}
@@ -668,7 +669,6 @@ private void saveExit() {
 		System.out.println("File Not Found");
 
 	}
-	menu.saveMessage();
 }
 
 /**
