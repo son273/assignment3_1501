@@ -29,7 +29,7 @@
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <ListView fx:id="listSearch" layoutX="312.0" layoutY="87.0" prefHeight="366.0" prefWidth="634.0" />
+                        <ListView fx:id="listSearch" layoutX="312.0" layoutY="87.0" onMouseClicked="#listViewSelected" prefHeight="366.0" prefWidth="634.0" />
                         <Button fx:id="btnBuy" layoutX="592.0" layoutY="467.0" mnemonicParsing="false" onAction="#btnHandler" prefHeight="37.0" prefWidth="73.0" text="Buy">
                            <padding>
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -81,7 +81,7 @@
                         <Separator layoutX="299.0" layoutY="14.0" orientation="VERTICAL" prefHeight="535.0" prefWidth="0.0" />
                         <Separator layoutX="639.0" layoutY="19.0" orientation="VERTICAL" prefHeight="535.0" prefWidth="0.0" />
                         <Separator layoutX="305.0" layoutY="283.0" prefHeight="4.0" prefWidth="674.0" />
-                        <ChoiceBox layoutX="142.0" layoutY="102.0" prefWidth="150.0" />
+                        <ChoiceBox fx:id="comboBoxAdd" layoutX="142.0" layoutY="102.0" prefWidth="150.0" />
                         <Label layoutX="21.0" layoutY="106.0" text="Category">
                            <font>
                               <Font size="13.0" />
@@ -117,17 +117,17 @@
                               <Font size="13.0" />
                            </font>
                         </Label>
-                        <TextField layoutX="143.0" layoutY="158.0" />
-                        <Button layoutX="51.0" layoutY="504.0" mnemonicParsing="false" text="Save">
+                        <TextField fx:id="txtSerialAdd" layoutX="143.0" layoutY="158.0" />
+                        <Button fx:id="btnSaveAdd" layoutX="51.0" layoutY="504.0" mnemonicParsing="false" text="Save">
                            <padding>
                               <Insets bottom="10.0" left="80.0" right="80.0" top="10.0" />
                            </padding>
                         </Button>
-                        <TextField layoutX="143.0" layoutY="207.0" />
-                        <TextField layoutX="142.0" layoutY="259.0" />
-                        <TextField layoutX="143.0" layoutY="315.0" />
-                        <TextField layoutX="143.0" layoutY="370.0" />
-                        <TextField layoutX="143.0" layoutY="430.0" />
+                        <TextField fx:id="txtNameAdd" layoutX="143.0" layoutY="207.0" />
+                        <TextField fx:id="txtNameBrand" layoutX="142.0" layoutY="259.0" />
+                        <TextField fx:id="txtPriceAdd" layoutX="143.0" layoutY="315.0" />
+                        <TextField fx:id="txtCountAdd" layoutX="143.0" layoutY="370.0" />
+                        <TextField fx:id="txtAgeAdd" layoutX="143.0" layoutY="430.0" />
                         <Label layoutX="452.0" layoutY="50.0" text="Figure">
                            <font>
                               <Font size="14.0" />
@@ -157,43 +157,43 @@
                               <Font size="13.0" />
                            </font>
                         </Label>
-                        <TextField layoutX="455.0" layoutY="114.0" />
+                        <TextField fx:id="txtClassAdd" layoutX="455.0" layoutY="114.0" />
                         <Label layoutX="338.0" layoutY="410.0" text="Type">
                            <font>
                               <Font size="13.0" />
                            </font>
                         </Label>
-                        <TextField layoutX="455.0" layoutY="407.0" />
+                        <TextField fx:id="txtTypeAdd" layoutX="455.0" layoutY="407.0" />
                         <Label layoutX="698.0" layoutY="115.0" text="Material">
                            <font>
                               <Font size="13.0" />
                            </font>
                         </Label>
-                        <TextField layoutX="815.0" layoutY="112.0" />
+                        <TextField fx:id="txtMaterialAdd" layoutX="815.0" layoutY="112.0" />
                         <Label layoutX="699.0" layoutY="161.0" text="Size">
                            <font>
                               <Font size="13.0" />
                            </font>
                         </Label>
-                        <TextField layoutX="819.0" layoutY="158.0" />
+                        <TextField fx:id="txtSizeAdd" layoutX="819.0" layoutY="158.0" />
                         <Label layoutX="652.0" layoutY="400.0" text="Minimum Number of Players">
                            <font>
                               <Font size="13.0" />
                            </font>
                         </Label>
-                        <TextField layoutX="832.0" layoutY="394.0" />
+                        <TextField fx:id="txtMinPAdd" layoutX="832.0" layoutY="394.0" />
                         <Label layoutX="651.0" layoutY="445.0" text="Maximum Number of Players">
                            <font>
                               <Font size="13.0" />
                            </font>
                         </Label>
-                        <TextField layoutX="832.0" layoutY="439.0" />
+                        <TextField fx:id="txtMaxPAdd" layoutX="832.0" layoutY="439.0" />
                         <Label layoutX="652.0" layoutY="494.0" text="Designers">
                            <font>
                               <Font size="13.0" />
                            </font>
                         </Label>
-                        <TextField layoutX="832.0" layoutY="491.0" />
+                        <TextField fx:id="txtDesignersAdd" layoutX="832.0" layoutY="491.0" />
                      </children>
                   </AnchorPane>
             </content>

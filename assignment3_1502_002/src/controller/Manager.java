@@ -134,9 +134,9 @@ void btnHandler(ActionEvent event) {
 					if (event.getSource().equals(btnBuy)) {
 						for (Toys item : toy) {
 							if (item.getName()==choice.getName()) {
-								int count = item.getAvalibleCount() ;
+								int count = choice.getAvalibleCount() ;
 								count -=1 ;
-								item.setAvalibleCount(count);
+								choice.setAvalibleCount(count);
 								}
 					}
 					saveExit();
