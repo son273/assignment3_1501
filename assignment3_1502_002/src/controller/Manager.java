@@ -100,18 +100,19 @@ void btnHandler(ActionEvent event) {
 			String serialNumberString = textSN.getText();
 			serialNumberString.trim();
 			long serialNum = Long.parseLong(serialNumberString);
-			searchSerial(serialNum);
+			boolean found = searchSerial(serialNum);
 
-			
-			if (event.getSource().equals(btnBuy)) {
-				for (Toys item : toy) {
-					if (item.getSerialNumber()==serialNum) {
-						int count = item.getAvalibleCount() ;
-						count -=1 ;
-						item.setAvalibleCount(count);
-						}
+			if (found == true) {
+				if (event.getSource().equals(btnBuy)) {
+					for (Toys item : toy) {
+						if (item.getSerialNumber()==serialNum) {
+							int count = item.getAvalibleCount() ;
+							count -=1 ;
+							item.setAvalibleCount(count);
+							}
 				}
 				saveExit();
+				}
 			}
 			//send to SN search
 		}
@@ -172,91 +173,11 @@ void txtSearchHandler(ActionEvent event) {
 }
 
 
-
-
-/**
- * This Method is resposible for displaying and running the main menu
- * 
- * @throws MinPlayerException responsible for making sure min player is not
- *                            larger than max player when adding a toy
- * 
- */
-
-//public void menuOptions() throws MinPlayerException {
-//	boolean flag = true;
-//	int choice = 0;
-////	boolean exceptionLoop = true;
-////	while (exceptionLoop) {
-//
-//	while (flag) {
-//		try {
-//			choice = menu.showMainMenu(); // Displays Main Menu
-//			switch (choice) {
-//			case 1: // Search the store and purchase a toy
-//				findAndPurchase();
-//				break;
-//			case 2: // Adds a toy
-//				addToy();
-//				break;
-//			case 3: // Removes a toy
-//				removeToy();
-//				break;
-//			case 4: // Saves and Exists
-//				saveExit();
-//				flag = false;
-//				break;
-//			default:
-//				menu.validateOptionNotValid();
-//				break;
-//			}
-//		} catch (InputMismatchException e) {
-//			menu.validateNumNotValid();
-//			menu.promptEnterKeyMainMenu();
-//
-//		}
-//	}
-//}
-
-/**
- * This Method is responsible for displaying and running the search menu
- */
-
-//private void findAndPurchase() {
-//	boolean flag = true;
-//	// use case to
-//	while (flag) {
-//		try {
-//			int choice = menu.searchMenu();
-//			switch (choice) {
-//			case 1: // Search by Serial Number
-//				searchSerial();
-//				break;
-//
-//			case 2: // Search by name
-//				searchName();
-//				break;
-//			case 3: // Search by type
-//				searchType();
-//				break;
-//			case 4: // Exits the search menu
-//				flag = false;
-//				break;
-//
-//			}
-//		} catch (InputMismatchException mismatch) {
-//			menu.validateNumNotValid();
-//			menu.promptEnterKey();
-//
-//		}
-//	}
-//
-//}
-
 /**
  * This Method is responsible for searching the database for a matching serial
  * number and prompting user to purchase item
  */
-public void searchSerial(long serialNum) {
+public boolean searchSerial(long serialNum) {
 	boolean found = false; // Becomes true if item is found
 	boolean enter = false; // Becomes true when user presses enter
 	boolean exceptionLoop = true; // Used to keep looping try/catch until exception is cleared
@@ -268,12 +189,9 @@ public void searchSerial(long serialNum) {
 					found = true;
 					serialNum = item.getSerialNumber();
 					ObservableList<Toys> t = FXCollections.observableArrayList(item);
-					listSearch.getItems().addAll(t);
-					
+					listSearch.getItems().addAll(t);	
+					return found;
 				} else if (item.getSerialNumber() == serialNum && item.getAvalibleCount() == 0) {
-					menu.noStock(); // if the specific item has a stock cound of 0, then displays out of stock
-					found = true;
-					menu.promptEnterKey();
 					break;
 				}
 			
@@ -281,12 +199,14 @@ public void searchSerial(long serialNum) {
 				menu.doesntExist();
 				menu.promptEnterKey();
 			}
-		
+			
 			exceptionLoop = false;
+
 		} catch (InputMismatchException mismatch) {
 			menu.validateNumNotValid();
 		}
 	}
+	return found;
 }
 
 
@@ -314,9 +234,7 @@ private void searchName(String name) {
 
 	if (found != true) { // This If statement is responsible for telling user that the item they were
 							// looking for was not found and going back to the search menu
-		menu.doesntExist();
-		enter = true;
-		menu.promptEnterKey();
+	
 	}
 
 	while (enter != true) { // This loops is responsible for dealing with purchase of item and validating
