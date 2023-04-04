@@ -14,6 +14,18 @@ import model.Figures;
 import model.Puzzles;
 import model.Toys;
 import view.AppMenu;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.paint.Color;
 //Manages and runs the application
 
 /**
@@ -28,15 +40,123 @@ public class Manager {
 	private ArrayList<Toys> toy;//ArrayList for toys object
 	private AppMenu menu;//AppMenu Object
 	private final String FILE_PATH = "res/toys.txt";//File Path for database
+	@FXML
+    private Button btnBuy;
+
+    @FXML
+    private Button btnClear;
+
+    @FXML
+    private Button btnSearch;
+
+    @FXML
+    private ListView<Toys> listSearch;
+
+    @FXML
+    private RadioButton radioName;
+
+    @FXML
+    private RadioButton radioSN;
+
+    @FXML
+    private RadioButton radioType;
+
+    @FXML
+    private ToggleGroup searchInv;
+
+    @FXML
+    private TextField textName;
+
+    @FXML
+    private TextField textSN;
+
+    @FXML
+    private TextField textType;
+
+    @FXML
+    private Label nameLabel;
+    
+    @FXML
+    private Label snLabel;
+    
+    @FXML
+    private Label typeLabel;
+
 	
 	
 public Manager() throws MinPlayerException  {
 	toy = new ArrayList<>();
 	menu = new AppMenu();
 	loadData();
-	menuOptions();
-	
+//	menuOptions();
+
 }
+
+@FXML
+void btnHandler(ActionEvent event) {
+	if (event.getSource().equals(btnSearch)) {
+		if (radioSN.isSelected()) {
+			String serialNumberString = textSN.getText();
+			serialNumberString.trim();
+			long serialNum = Long.parseLong(serialNumberString);
+			searchSerial(serialNum);
+
+			
+			if (event.getSource().equals(btnBuy)) {
+				for (Toys item : toy) {
+					if (item.getSerialNumber()==serialNum) {
+						int count = item.getAvalibleCount() ;
+						count -=1 ;
+						item.setAvalibleCount(count);
+						}
+
+				}
+			}
+			//send to SN search
+		}
+		else if (radioName.isSelected()) {
+			String name = textName.getText();
+			name.trim().toLowerCase();
+			searchName(name);
+			//send to name search
+			
+		}
+		else if (radioType.isSelected()) {
+			String type = textType.getText();
+			type.trim();
+			//send to Type search
+		}
+		
+	}
+	else if (event.getSource().equals(btnClear)) {
+		
+	}
+
+}
+
+@FXML
+void radioAction(ActionEvent event) {
+	if(radioSN.isSelected()) {
+		snLabel.setTextFill(Color.RED);
+		
+	}
+	else if(radioName.isSelected()) {
+		nameLabel.setTextFill(Color.RED);
+	}
+
+	else if (radioType.isSelected()) {
+		typeLabel.setTextFill(Color.RED);
+	}
+}
+
+@FXML
+void txtSearchHandler(ActionEvent event) {
+	
+
+}
+
+
+
 
 /**
  * This Method is resposible for displaying and running the main menu
@@ -45,121 +165,107 @@ public Manager() throws MinPlayerException  {
  *                            larger than max player when adding a toy
  * 
  */
-public void menuOptions() throws MinPlayerException {
-	boolean flag = true;
-	int choice = 0;
-//	boolean exceptionLoop = true;
-//	while (exceptionLoop) {
 
-	while (flag) {
-		try {
-			choice = menu.showMainMenu(); // Displays Main Menu
-			switch (choice) {
-			case 1: // Search the store and purchase a toy
-				findAndPurchase();
-				break;
-			case 2: // Adds a toy
-				addToy();
-				break;
-			case 3: // Removes a toy
-				removeToy();
-				break;
-			case 4: // Saves and Exists
-				saveExit();
-				flag = false;
-				break;
-			default:
-				menu.validateOptionNotValid();
-				break;
-			}
-		} catch (InputMismatchException e) {
-			menu.validateNumNotValid();
-			menu.promptEnterKeyMainMenu();
-
-		}
-	}
-}
+//public void menuOptions() throws MinPlayerException {
+//	boolean flag = true;
+//	int choice = 0;
+////	boolean exceptionLoop = true;
+////	while (exceptionLoop) {
+//
+//	while (flag) {
+//		try {
+//			choice = menu.showMainMenu(); // Displays Main Menu
+//			switch (choice) {
+//			case 1: // Search the store and purchase a toy
+//				findAndPurchase();
+//				break;
+//			case 2: // Adds a toy
+//				addToy();
+//				break;
+//			case 3: // Removes a toy
+//				removeToy();
+//				break;
+//			case 4: // Saves and Exists
+//				saveExit();
+//				flag = false;
+//				break;
+//			default:
+//				menu.validateOptionNotValid();
+//				break;
+//			}
+//		} catch (InputMismatchException e) {
+//			menu.validateNumNotValid();
+//			menu.promptEnterKeyMainMenu();
+//
+//		}
+//	}
+//}
 
 /**
  * This Method is responsible for displaying and running the search menu
  */
-private void findAndPurchase() {
-	boolean flag = true;
-	// use case to
-	while (flag) {
-		try {
-			int choice = menu.searchMenu();
-			switch (choice) {
-			case 1: // Search by Serial Number
-				searchSerial();
-				break;
 
-			case 2: // Search by name
-				searchName();
-				break;
-			case 3: // Search by type
-				searchType();
-				break;
-			case 4: // Exits the search menu
-				flag = false;
-				break;
-
-			}
-		} catch (InputMismatchException mismatch) {
-			menu.validateNumNotValid();
-			menu.promptEnterKey();
-
-		}
-	}
-
-}
+//private void findAndPurchase() {
+//	boolean flag = true;
+//	// use case to
+//	while (flag) {
+//		try {
+//			int choice = menu.searchMenu();
+//			switch (choice) {
+//			case 1: // Search by Serial Number
+//				searchSerial();
+//				break;
+//
+//			case 2: // Search by name
+//				searchName();
+//				break;
+//			case 3: // Search by type
+//				searchType();
+//				break;
+//			case 4: // Exits the search menu
+//				flag = false;
+//				break;
+//
+//			}
+//		} catch (InputMismatchException mismatch) {
+//			menu.validateNumNotValid();
+//			menu.promptEnterKey();
+//
+//		}
+//	}
+//
+//}
 
 /**
  * This Method is responsible for searching the database for a matching serial
  * number and prompting user to purchase item
  */
-public void searchSerial() {
+public void searchSerial(long serialNum) {
 	boolean found = false; // Becomes true if item is found
 	boolean enter = false; // Becomes true when user presses enter
 	boolean exceptionLoop = true; // Used to keep looping try/catch until exception is cleared
-	long serialNum = 0;
+
 	while (exceptionLoop) {
 		try {
-			serialNum = menu.promptSerialNum(); // prompts for serial num
-
 			for (Toys item : toy) // iterates through file array
 				if (item.getSerialNumber() == serialNum && item.getAvalibleCount() > 0) {
 					found = true;
-					while (enter != true) {
-						menu.serialSearchResults(item.toString()); // Displays the what the user can purchase
-						int choice = menu.promptPurchase(); // Prompts purchase
-						if (choice == 1) { // If they choose 1, they purchase item
-							int stock = item.getAvalibleCount();
-							stock -= 1; // deals with stock
-							item.setAvalibleCount(stock);
-							menu.purchaseSuccessful(); // displays purchase is successful
-							menu.promptEnterKey(); // prompts for user to press enter
-							enter = true;
-
-						} else if (choice == 2) { // If they type 2, they go back a menu
-							enter = true;
-							break;
-						} else { // Any other input is invalid
-							menu.validateOptionNotValid();
-							menu.promptEnterKey();
-
-						}
-					}
+					serialNum = item.getSerialNumber();
+					ObservableList<Toys> t = FXCollections.observableArrayList(item);
+					listSearch.getItems().addAll(t);
+					
 				} else if (item.getSerialNumber() == serialNum && item.getAvalibleCount() == 0) {
 					menu.noStock(); // if the specific item has a stock cound of 0, then displays out of stock
 					found = true;
 					menu.promptEnterKey();
 					break;
 				}
+			
 			if (found != true) { // If item serial num is not in arraylist, displays item doesn't exist
 				menu.doesntExist();
 				menu.promptEnterKey();
 			}
+		
 			exceptionLoop = false;
 		} catch (InputMismatchException mismatch) {
 			menu.validateNumNotValid();
@@ -167,14 +273,14 @@ public void searchSerial() {
 	}
 }
 
+
 /**
  * This Method is responsible for searching the database for a matching name and
  * prompting the user to purchase item
  */
-private void searchName() {
+private void searchName(String name) {
 	boolean found = false; // Becomes true once item is found
 	boolean enter = false; // Becomes true once user presses enter
-	String name = menu.prompToyName().trim().toLowerCase(); // prompts for user to input a toy name
 	ArrayList<Toys> nameArray = new ArrayList<>();
 	int itemCount = 0;
 	int listSize = 0;
