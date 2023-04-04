@@ -92,8 +92,10 @@ public Manager() throws MinPlayerException  {
 //	menuOptions();
 
 }@FXML
-public void listViewSelected() {
-	listSearch.getSelectionModel().getSelectedItem();
+public Toys listViewSelected() {
+	Toys item= listSearch.getSelectionModel().getSelectedItem();
+	return item;
+
 }
 
 
@@ -107,9 +109,10 @@ void btnHandler(ActionEvent event) {
 			boolean found = searchSerial(serialNum);
 
 			if (found == true) {
+				Toys choice = listViewSelected();
 				if (event.getSource().equals(btnBuy)) {
 					for (Toys item : toy) {
-						if (item.getSerialNumber()==serialNum) {
+						if (item.getSerialNumber()==choice.getSerialNumber()) {
 							int count = item.getAvalibleCount() ;
 							count -=1 ;
 							item.setAvalibleCount(count);
@@ -127,9 +130,10 @@ void btnHandler(ActionEvent event) {
 				boolean found = searchName(name);
 	
 				if (found == true) {
+					Toys choice = listViewSelected();
 					if (event.getSource().equals(btnBuy)) {
 						for (Toys item : toy) {
-							if (item.getName()==name) {
+							if (item.getName()==choice.getName()) {
 								int count = item.getAvalibleCount() ;
 								count -=1 ;
 								item.setAvalibleCount(count);
