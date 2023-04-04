@@ -22,7 +22,7 @@ public class AppMenu {
 	 */
 	public AppMenu() { // Constructor of AppMenu, initializes scanner and calls welcomeMessage
 		input = new Scanner(System.in);
-		welcomeMessage();
+ 
 	}
 
 	/**

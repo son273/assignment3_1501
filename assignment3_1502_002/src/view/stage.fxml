@@ -59,11 +59,11 @@
                            </padding>
                         </Button>
                         <Label fx:id="snLabel" layoutX="15.0" layoutY="212.0" text="Serial Number (SN)" />
-                        <TextField fx:id="textSN" layoutX="130.0" layoutY="208.0" onAction="#txtSearchHandler" promptText="Enter SN Here" />
+                        <TextField fx:id="textSN" layoutX="130.0" layoutY="208.0" onAction="#txtSearchHandler" />
                         <Label fx:id="nameLabel" layoutX="15.0" layoutY="252.0" text="Name" />
                         <Label fx:id="typeLabel" layoutX="18.0" layoutY="293.0" text="Type" />
-                        <TextField fx:id="textName" layoutX="130.0" layoutY="248.0" onAction="#txtSearchHandler" promptText="Enter Name Here" />
-                        <TextField fx:id="textType" layoutX="130.0" layoutY="289.0" onAction="#txtSearchHandler" promptText="Enter Type Here" />
+                        <TextField fx:id="textName" layoutX="130.0" layoutY="248.0" onAction="#txtSearchHandler" />
+                        <TextField fx:id="textType" layoutX="130.0" layoutY="289.0" onAction="#txtSearchHandler" />
                      </children>
                   </AnchorPane>
             </content>
@@ -215,11 +215,17 @@
                               <Font size="13.0" />
                            </font>
                         </Label>
-                        <Button layoutX="99.0" layoutY="445.0" mnemonicParsing="false" text="Remove">
+                        <Button layoutX="99.0" layoutY="462.0" mnemonicParsing="false" text="Remove">
                            <padding>
                               <Insets bottom="7.0" left="30.0" right="30.0" top="7.0" />
                            </padding>
                         </Button>
+                        <Button layoutX="103.0" layoutY="303.0" mnemonicParsing="false" text="Search">
+                           <padding>
+                              <Insets bottom="7.0" left="30.0" right="30.0" top="7.0" />
+                           </padding>
+                        </Button>
+                        <Separator layoutX="8.0" layoutY="406.0" prefHeight="2.0" prefWidth="285.0" />
                      </children>
                   </AnchorPane>
               </content>

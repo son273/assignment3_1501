@@ -138,15 +138,30 @@ void btnHandler(ActionEvent event) {
 @FXML
 void radioAction(ActionEvent event) {
 	if(radioSN.isSelected()) {
+		textSN.setPromptText("Enter Type Here");
+		textName.setPromptText("");
+		textType.setPromptText("");
 		snLabel.setTextFill(Color.RED);
+		nameLabel.setTextFill(Color.BLACK);
+		typeLabel.setTextFill(Color.BLACK);
 		
 	}
 	else if(radioName.isSelected()) {
+		textName.setPromptText("Enter Type Here");
+		textType.setPromptText("");
+		textSN.setPromptText("");
 		nameLabel.setTextFill(Color.RED);
+		typeLabel.setTextFill(Color.BLACK);
+		snLabel.setTextFill(Color.BLACK);
 	}
 
 	else if (radioType.isSelected()) {
+		textType.setPromptText("Enter Type Here");
+		textName.setPromptText("");
+		textSN.setPromptText("");
 		typeLabel.setTextFill(Color.RED);
+		snLabel.setTextFill(Color.BLACK);
+		nameLabel.setTextFill(Color.BLACK);
 	}
 }
 
@@ -291,8 +306,8 @@ private void searchName(String name) {
 							// that contain the users input
 		if (item.getName().toLowerCase().trim().contains(name) && item.getAvalibleCount() > 0) {
 			nameArray.add(item);
-			itemCount++;
-			found = true;
+			ObservableList<Toys> t = FXCollections.observableArrayList(nameArray);
+			listSearch.getItems().addAll(t);
 		}
 
 	}
