@@ -91,7 +91,11 @@ public Manager() throws MinPlayerException  {
 	loadData();
 //	menuOptions();
 
+}@FXML
+public void listViewSelected() {
+	listSearch.getSelectionModel().getSelectedItem();
 }
+
 
 @FXML
 void btnHandler(ActionEvent event) {
@@ -117,20 +121,42 @@ void btnHandler(ActionEvent event) {
 			//send to SN search
 		}
 		else if (radioName.isSelected()) {
-			String name = textName.getText();
-			name.trim().toLowerCase();
-			searchName(name);
-			//send to name search
+			try {
+				String name = textName.getText();
+				name.trim().toLowerCase();
+				boolean found = searchName(name);
+	
+				if (found == true) {
+					if (event.getSource().equals(btnBuy)) {
+						for (Toys item : toy) {
+							if (item.getName()==name) {
+								int count = item.getAvalibleCount() ;
+								count -=1 ;
+								item.setAvalibleCount(count);
+								}
+					}
+					saveExit();
+					}
+				}
+			}catch(RuntimeException e) {
+				System.out.println("Please enter a correct name");
+			}
 			
 		}
 		else if (radioType.isSelected()) {
 			String type = textType.getText();
 			type.trim();
+			searchType(type);
 			//send to Type search
 		}
 		
 	}
 	else if (event.getSource().equals(btnClear)) {
+		textSN.clear();
+		textName.clear();
+		textType.clear();
+		listSearch.getItems().clear();
+		
 		
 	}
 
@@ -141,6 +167,9 @@ void radioAction(ActionEvent event) {
 	if(radioSN.isSelected()) {
 		textSN.setPromptText("Enter Type Here");
 		textName.setPromptText("");
+		textSN.setDisable(false);
+		textName.setDisable(true);
+		textType.setDisable(true);
 		textType.setPromptText("");
 		snLabel.setTextFill(Color.RED);
 		nameLabel.setTextFill(Color.BLACK);
@@ -151,6 +180,9 @@ void radioAction(ActionEvent event) {
 		textName.setPromptText("Enter Type Here");
 		textType.setPromptText("");
 		textSN.setPromptText("");
+		textSN.setDisable(true);
+		textName.setDisable(false);
+		textType.setDisable(true);
 		nameLabel.setTextFill(Color.RED);
 		typeLabel.setTextFill(Color.BLACK);
 		snLabel.setTextFill(Color.BLACK);
@@ -160,6 +192,9 @@ void radioAction(ActionEvent event) {
 		textType.setPromptText("Enter Type Here");
 		textName.setPromptText("");
 		textSN.setPromptText("");
+		textSN.setDisable(true);
+		textName.setDisable(true);
+		textType.setDisable(false);
 		typeLabel.setTextFill(Color.RED);
 		snLabel.setTextFill(Color.BLACK);
 		nameLabel.setTextFill(Color.BLACK);
@@ -213,8 +248,9 @@ public boolean searchSerial(long serialNum) {
 /**
  * This Method is responsible for searching the database for a matching name and
  * prompting the user to purchase item
+ * @return 
  */
-private void searchName(String name) {
+private boolean searchName(String name) {
 	boolean found = false; // Becomes true once item is found
 	boolean enter = false; // Becomes true once user presses enter
 	ArrayList<Toys> nameArray = new ArrayList<>();
@@ -228,55 +264,51 @@ private void searchName(String name) {
 			nameArray.add(item);
 			ObservableList<Toys> t = FXCollections.observableArrayList(nameArray);
 			listSearch.getItems().addAll(t);
+			found = true;
 		}
 
 	}
 
-	if (found != true) { // This If statement is responsible for telling user that the item they were
-							// looking for was not found and going back to the search menu
+//	if (found != true) { // This If statement is responsible for telling user that the item they were
+//		                 // looking for was not found and going back to the search menu
+//	
+//	}
+
+//	while (enter != true) { // This loops is responsible for dealing with purchase of item and validating
+//							// proper inputs when purchasing
+//		listSize = menu.nameSearchResults(nameArray, itemCount);
 	
+//
+//			choice = menu.promptPurchase(); // Prompts purchase
+//			          
+//			if (choice == listSize) { // If user input is equal to list size, goes back to main menu
+//				break;
+//			} else if (choice > listSize || choice < 0) { // If user input is larger than list size ot smaller than
+//															// the # of choices, displays error
+//				menu.validateOptionNotValid();
+//				menu.promptEnterKey();
+//			}
+//
+//			else { // If user chooses a toy to purchase, it will -1 from stock and prints purchase
+//					// was successful
+//				Toys item = nameArray.get(choice);
+//				int stock = item.getAvalibleCount();
+//				stock -= 1;
+//				item.setAvalibleCount(stock);
+//				menu.purchaseSuccessful();
+//
+//				menu.promptEnterKey(); // Asks user to press enter and breaks the while loop once done
+//				enter = true;
+//			}
+		return found;
 	}
 
-	while (enter != true) { // This loops is responsible for dealing with purchase of item and validating
-							// proper inputs when purchasing
-		listSize = menu.nameSearchResults(nameArray, itemCount);
-		try {
-
-			choice = menu.promptPurchase(); // Prompts purchase
-			choice -= 1;
-			listSize -= 1;
-			if (choice == listSize) { // If user input is equal to list size, goes back to main menu
-				break;
-			} else if (choice > listSize || choice < 0) { // If user input is larger than list size ot smaller than
-															// the # of choices, displays error
-				menu.validateOptionNotValid();
-				menu.promptEnterKey();
-			}
-
-			else { // If user chooses a toy to purchase, it will -1 from stock and prints purchase
-					// was successful
-				Toys item = nameArray.get(choice);
-				int stock = item.getAvalibleCount();
-				stock -= 1;
-				item.setAvalibleCount(stock);
-				menu.purchaseSuccessful();
-
-				menu.promptEnterKey(); // Asks user to press enter and breaks the while loop once done
-				enter = true;
-			}
-		} catch (InputMismatchException mismatch) {
-			menu.validateNumNotValid();
-			menu.promptEnterKey();
-		}
-	}
-}
 
 /**
  * This Method is responsible for searching the database for a matching toy type
  * and prompting the user to purchase item
  */
-private void searchType() {
-	String type = menu.promptType().trim().toLowerCase(); // Prompts user to enter a type of toy
+private void searchType(String type) {
 	ArrayList<Toys> nameArray = new ArrayList<>();
 	int listSize = 0;
 	int itemCount = 0;
@@ -330,40 +362,38 @@ private void searchType() {
 		enter = true;
 		menu.promptEnterKey();
 	}
+	ObservableList<Toys> t = FXCollections.observableArrayList(nameArray);
+	listSearch.getItems().addAll(t);
+	
+//		try {
+//			choice = menu.promptPurchase();// Prompts user which toy they want to purchase
+//			choice -= 1;
+//			listSize -= 1;
+//			if (choice == listSize) { // If choice is equal to the list size, goes back to menu
+//				break;
+//			} else if (choice > listSize || choice < 0) { // if input was larger than list size or smaller than 0,
+//															// displays invalid imput
+//				menu.validateOptionNotValid();
+//				menu.promptEnterKey();
+//			} else {// If user chooses a toy to purchase, it will -1 from stock and prints purchase
+//					// was successful
+//
+//				Toys item = nameArray.get(choice);
+//				int stock = item.getAvalibleCount();
+//				stock -= 1;
+//				item.setAvalibleCount(stock);
+//				menu.purchaseSuccessful();
+//
+//				menu.promptEnterKey();// Asks user to press enter and breaks the while loop once done
+//				enter = true;
+//			}
+//
+//		} catch (InputMismatchException mismatch) {
+//			menu.validateNumNotValid();
+//			menu.promptEnterKey();
+//		}
 
-	while (enter != true) { // This loops is responsible for dealing with purchase of item and validating
-							// proper inputs when purhcasing
-		listSize = menu.nameSearchResults(nameArray, itemCount); // Sends array and item count to AppMenu to be
-																	// displayed
-		try {
-			choice = menu.promptPurchase();// Prompts user which toy they want to purchase
-			choice -= 1;
-			listSize -= 1;
-			if (choice == listSize) { // If choice is equal to the list size, goes back to menu
-				break;
-			} else if (choice > listSize || choice < 0) { // if input was larger than list size or smaller than 0,
-															// displays invalid imput
-				menu.validateOptionNotValid();
-				menu.promptEnterKey();
-			} else {// If user chooses a toy to purchase, it will -1 from stock and prints purchase
-					// was successful
-
-				Toys item = nameArray.get(choice);
-				int stock = item.getAvalibleCount();
-				stock -= 1;
-				item.setAvalibleCount(stock);
-				menu.purchaseSuccessful();
-
-				menu.promptEnterKey();// Asks user to press enter and breaks the while loop once done
-				enter = true;
-			}
-
-		} catch (InputMismatchException mismatch) {
-			menu.validateNumNotValid();
-			menu.promptEnterKey();
-		}
-
-	}
+//	}
 }
 
 /**
