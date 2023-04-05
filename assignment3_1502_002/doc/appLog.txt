@@ -1,0 +1,20 @@
+Apr. 04, 2023 2:37:40 P.M. application.Main main
+INFO: Application Started
+Apr. 04, 2023 2:52:27 P.M. application.Main main
+INFO: Application Started
+Apr. 04, 2023 2:53:52 P.M. application.Main main
+INFO: Application Started
+Apr. 04, 2023 2:54:44 P.M. application.Main main
+INFO: Application Started
+Apr. 04, 2023 2:55:26 P.M. application.Main main
+INFO: Application Started
+Apr. 04, 2023 2:58:58 P.M. application.Main main
+INFO: Application Started
+Apr. 04, 2023 3:10:20 P.M. controller.Manager <init>
+INFO: Application Launched
+Apr. 04, 2023 3:17:57 P.M. controller.Manager <init>
+INFO: Application Launched
+Apr. 04, 2023 3:18:01 P.M. controller.Manager btnHandler
+INFO: Button Pressed
+Apr. 04, 2023 3:18:02 P.M. controller.Manager btnHandler
+INFO: Button Pressed

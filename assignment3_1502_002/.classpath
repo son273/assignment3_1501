@@ -2,53 +2,61 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="lib"/>
+	<classpathentry kind="src" path="res"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
+<<<<<<< HEAD
+	<classpathentry kind="lib" path="/Users/caesarliang/Downloads/javafx-sdk-20/lib/javafx-swt.jar">
+=======
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
 	<classpathentry kind="lib" path="C:/Users/steve/Java Libraries/javafx-sdk-19.0.2.1/lib/javafx.base.jar">
+>>>>>>> branch 'main' of https://github.com/son273/assignment3_1502.git
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/steve/Java Libraries/javafx-sdk-19.0.2.1/lib/javafx.controls.jar">
+	<classpathentry kind="lib" path="/Users/caesarliang/Downloads/javafx-sdk-20/lib/javafx.base.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/steve/Java Libraries/javafx-sdk-19.0.2.1/lib/javafx.fxml.jar">
+	<classpathentry kind="lib" path="/Users/caesarliang/Downloads/javafx-sdk-20/lib/javafx.controls.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/steve/Java Libraries/javafx-sdk-19.0.2.1/lib/javafx.graphics.jar">
+	<classpathentry kind="lib" path="/Users/caesarliang/Downloads/javafx-sdk-20/lib/javafx.fxml.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/steve/Java Libraries/javafx-sdk-19.0.2.1/lib/javafx.media.jar">
+	<classpathentry kind="lib" path="/Users/caesarliang/Downloads/javafx-sdk-20/lib/javafx.graphics.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/steve/Java Libraries/javafx-sdk-19.0.2.1/lib/javafx.swing.jar">
+	<classpathentry kind="lib" path="/Users/caesarliang/Downloads/javafx-sdk-20/lib/javafx.media.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/steve/Java Libraries/javafx-sdk-19.0.2.1/lib/javafx.web.jar">
+	<classpathentry kind="lib" path="/Users/caesarliang/Downloads/javafx-sdk-20/lib/javafx.swing.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/steve/Java Libraries/javafx-sdk-19.0.2.1/lib/javafx-swt.jar">
+	<classpathentry kind="lib" path="/Users/caesarliang/Downloads/javafx-sdk-20/lib/javafx.web.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
+<<<<<<< HEAD
+=======
 	<classpathentry kind="src" path="res"/>
 	<classpathentry kind="src" path="test"/>
+>>>>>>> branch 'main' of https://github.com/son273/assignment3_1502.git
 	<classpathentry kind="output" path="bin"/>
 </classpath>

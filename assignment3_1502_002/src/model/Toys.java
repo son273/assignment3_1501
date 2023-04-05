@@ -17,7 +17,6 @@ public abstract class Toys {
 	protected float price; // Price of Toy
 	protected int stockCount; // Availible Stock
 	protected int minAge; // Minimum Age
-	
 
 	public Toys(long serialNum, String name, String brand, float price, int stockCount, int minAge) {
 		this.serialNum = serialNum;

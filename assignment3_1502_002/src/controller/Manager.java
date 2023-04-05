@@ -168,12 +168,30 @@ public class Manager implements Initializable{
 
     @FXML
     private Label typeLabel;
+  
+    private static final Logger logger = Logger.getLogger("MyLogger");
 	
-public Manager() throws MinPlayerException  {
-	toy = new ArrayList<>();
+  public Manager() throws MinPlayerException {
+		Logger();
+		logger.info("Application Launched");
+		toy = new ArrayList<>();
+		loadData();
+	}
 
-	loadData();
-}
+  private void Logger() {
+		try {
+			File logFile = new File("doc/appLog.txt");
+			String logFilePath = logFile.getAbsolutePath();
+			FileHandler fh = new FileHandler(logFilePath, true);
+			fh.setLevel(Level.ALL);
+			logger.addHandler(fh);
+			fh.setFormatter(new SimpleFormatter());
+		} catch (IOException e) {
+			System.err.println("Error creating log file: " + e.getMessage());
+		} catch (SecurityException e) {
+			System.err.println("Security exception: " + e.getMessage());
+		}
+	}
 
 
 
@@ -194,6 +212,7 @@ public Toys listViewSelectedR() {
 @FXML
 void btnHandler(ActionEvent event){ //Handles btn on home page
 	if (event.getSource().equals(btnSearch)) { //If User presses search
+		logger.info("Button Pressed");
 		if (radioSN.isSelected()) { // If Radio button serial number is selected
 			
 			boolean found = false;
@@ -903,3 +922,5 @@ public void initialize(URL arg0, ResourceBundle arg1) {
 
 
 }
+
+
