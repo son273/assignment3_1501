@@ -194,6 +194,7 @@ public class Manager implements Initializable{
 	}
 
 
+
 @FXML
 public Toys listViewSelected() {
 	Toys item= listSearch.getSelectionModel().getSelectedItem();
