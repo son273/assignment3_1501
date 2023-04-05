@@ -171,7 +171,6 @@ public class Manager implements Initializable{
 	
 public Manager() throws MinPlayerException  {
 	toy = new ArrayList<>();
-
 	loadData();
 }
 
