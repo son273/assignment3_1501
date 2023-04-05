@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import model.Toys;
+
 /**
  * 
  * The AppMenu class is used to show the menus and submenus to the user * It
@@ -22,7 +23,7 @@ public class AppMenu {
 	 */
 	public AppMenu() { // Constructor of AppMenu, initializes scanner and calls welcomeMessage
 		input = new Scanner(System.in);
- 
+
 	}
 
 	/**
@@ -320,7 +321,6 @@ public class AppMenu {
 	public void noStock() {
 		System.out.println("Sorry, the product you wanted to purchase is out of Stock");
 	}
-
 
 	/**
 	 * displays new toy added message
