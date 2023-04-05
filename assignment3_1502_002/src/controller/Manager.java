@@ -805,6 +805,7 @@ private void saveExit() {
 		PrintWriter pw = new PrintWriter(txt);
 		for (int i = 0; i < toy.size(); i++) { // Iterates thorugh arrayList and writes to txt file
 			pw.println(toy.get(i).format());
+			
 
 		}
 		pw.close();
