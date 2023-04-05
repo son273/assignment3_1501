@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.File;
+
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.net.URI;
@@ -16,7 +17,6 @@ import model.BoardGames;
 import model.Figures;
 import model.Puzzles;
 import model.Toys;
-import view.AppMenu;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -44,7 +44,6 @@ import javafx.scene.paint.Color;
 */
 public class Manager implements Initializable{
 	private ArrayList<Toys> toy;//ArrayList for toys object
-	private AppMenu menu;//AppMenu Object
 	private final String FILE_PATH = "res/toys.txt";//File Path for database
 	String [] items = {"Figure", "Animals", "Puzzles", "Board Games"};
 
@@ -172,7 +171,7 @@ public class Manager implements Initializable{
 	
 public Manager() throws MinPlayerException  {
 	toy = new ArrayList<>();
-	menu = new AppMenu();
+
 	loadData();
 }
 
@@ -492,7 +491,7 @@ public boolean searchSerial(long serialNum) {
 			exceptionLoop = false;
 
 		} catch (InputMismatchException mismatch) {
-			menu.validateNumNotValid();
+			notExist.setVisible(true);
 		}
 	}
 	return found;
