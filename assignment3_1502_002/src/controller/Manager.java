@@ -3,8 +3,11 @@ package controller;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.ResourceBundle;
 import java.util.Scanner;
 
 import exceptions.MinPlayerException;
@@ -19,7 +22,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
@@ -36,10 +42,13 @@ import javafx.scene.paint.Color;
 * @version 6.9
 * 
 */
-public class Manager {
+public class Manager implements Initializable{
 	private ArrayList<Toys> toy;//ArrayList for toys object
 	private AppMenu menu;//AppMenu Object
 	private final String FILE_PATH = "res/toys.txt";//File Path for database
+	String [] items = {"Figure", "Animals", "Puzzles", "Board Games"};
+
+	//Propeties in Home Page:
 	@FXML
     private Button btnBuy;
 
@@ -47,10 +56,44 @@ public class Manager {
     private Button btnClear;
 
     @FXML
+    private Button btnClearAdd;
+
+    @FXML
+    private Button btnClearR;
+    
+
+    @FXML
+    private Button btnRemove;
+
+    @FXML
+    private Button btnSaveAdd;
+
+    @FXML
     private Button btnSearch;
 
     @FXML
+    private Button btnSearchRemove;
+
+    @FXML
+    private ComboBox combobox;
+
+    @FXML
+    private Label invalidInputs;
+    
+    @FXML
+    private Label invalidSerialR;
+
+    @FXML
+    private ListView<Toys> listRemove;
+
+    @FXML
     private ListView<Toys> listSearch;
+
+    @FXML
+    private Label nameLabel;
+
+    @FXML
+    private Label notExist;
 
     @FXML
     private RadioButton radioName;
@@ -65,110 +108,277 @@ public class Manager {
     private ToggleGroup searchInv;
 
     @FXML
+    private Label snLabel;
+
+    @FXML
     private TextField textName;
 
     @FXML
     private TextField textSN;
-    
 
     @FXML
     private TextField textType;
 
     @FXML
-    private Label nameLabel;
-    
+    private Label toyAdd;
+
     @FXML
-    private Label snLabel;
-    
+    private Label toyRemoved;
+
+    @FXML
+    private TextField txtAgeAdd;
+
+    @FXML
+    private TextField txtBrndAdd;
+
+    @FXML
+    private TextField txtClassAdd;
+
+    @FXML
+    private TextField txtCountAdd;
+
+    @FXML
+    private TextField txtDesignersAdd;
+
+    @FXML
+    private TextField txtMaterialAdd;
+
+    @FXML
+    private TextField txtMaxPAdd;
+
+    @FXML
+    private TextField txtMinPAdd;
+
+    @FXML
+    private TextField txtNameAdd;
+
+    @FXML
+    private TextField txtPriceAdd;
+
+    @FXML
+    private TextField txtSerialAdd;
+
+    @FXML
+    private TextField txtSerialRemove;
+
+    @FXML
+    private TextField txtSizeAdd;
+
+    @FXML
+    private TextField txtTypeAdd;
+
     @FXML
     private Label typeLabel;
-
-	
 	
 public Manager() throws MinPlayerException  {
 	toy = new ArrayList<>();
 	menu = new AppMenu();
 	loadData();
-//	menuOptions();
+}
 
-}@FXML
+
+
+@FXML
 public Toys listViewSelected() {
 	Toys item= listSearch.getSelectionModel().getSelectedItem();
 	return item;
 
 }
 
+@FXML
+public Toys listViewSelectedR() {
+	Toys item= listRemove.getSelectionModel().getSelectedItem();
+	return item;
+
+}
 
 @FXML
-void btnHandler(ActionEvent event) {
-	if (event.getSource().equals(btnSearch)) {
-		if (radioSN.isSelected()) {
+void btnHandler(ActionEvent event){ //Handles btn on home page
+	if (event.getSource().equals(btnSearch)) { //If User presses search
+		if (radioSN.isSelected()) { // If Radio button serial number is selected
+			
+			boolean found = false;
 			String serialNumberString = textSN.getText();
-			serialNumberString.trim();
-			long serialNum = Long.parseLong(serialNumberString);
-			boolean found = searchSerial(serialNum);
-
-			if (found == true) {
-				Toys choice = listViewSelected();
-				if (event.getSource().equals(btnBuy)) {
-					for (Toys item : toy) {
-						if (item.getSerialNumber()==choice.getSerialNumber()) {
-							int count = item.getAvalibleCount() ;
-							count -=1 ;
-							item.setAvalibleCount(count);
-							}
+			if(!serialNumberString.matches("[a-zA-Z]+")) {//Makes sure no letters are in the textfield
+				if(serialNumberString != "") { // Checks the box is not empty
+					serialNumberString.trim();
+					long serialNum = Long.parseLong(serialNumberString);
+					found = searchSerial(serialNum); //Sends to method to search and display on List view
+				}else { //If not found, displays item isn't found
+					notExist.setVisible(true);
 				}
-				saveExit();
-				}
+			}else {
+				notExist.setVisible(true);
 			}
-			//send to SN search
 		}
-		else if (radioName.isSelected()) {
+		else if (radioName.isSelected()) { // If Radio button name is selected
+			boolean found = false;
 			try {
 				String name = textName.getText();
 				name.trim().toLowerCase();
-				boolean found = searchName(name);
-	
-				if (found == true) {
-					Toys choice = listViewSelected();
-					if (event.getSource().equals(btnBuy)) {
-						for (Toys item : toy) {
-							if (item.getName()==choice.getName()) {
-								int count = choice.getAvalibleCount() ;
-								count -=1 ;
-								choice.setAvalibleCount(count);
-								}
-					}
-					saveExit();
-					}
+				if (name != "") { //Checks to make sure box isn't empty
+					found = searchName(name);//sends to method to find and display on listview
 				}
-			}catch(RuntimeException e) {
+				else { //if empty, displays item not found
+					notExist.setVisible(true);
+					}	
+				}
+			catch(RuntimeException e) {
 				System.out.println("Please enter a correct name");
 			}
 			
 		}
-		else if (radioType.isSelected()) {
+		else if (radioType.isSelected()) {// If Radio button type is selected
 			String type = textType.getText();
 			type.trim();
-			searchType(type);
-			//send to Type search
+			if (type != "") { //checks to make sure type isn't empty
+				searchType(type); //sends to method to find and display on listview
+			}
+			else {
+				notExist.setVisible(true);
+			}
 		}
-		
 	}
-	else if (event.getSource().equals(btnClear)) {
+	if (event.getSource().equals(btnBuy)) { // If buy is pressed
+		Toys choice = listViewSelected();	//Detects what object user pressed
+		if (choice != null) { //Validates user pressed a item
+			for (Toys item : toy) {//Goes through array
+				if (item.getSerialNumber()==choice.getSerialNumber()) {//Gets item
+					int count = item.getAvalibleCount(); 
+					count -=1;
+					item.setAvalibleCount(count);
+					}
+				else {
+	
+				}
+				
+				}
+			}
+		saveExit(); //Saves to txtfile
+		}
+	 if (event.getSource().equals(btnClear)) { //If Clear is pressed, clears all fields
 		textSN.clear();
 		textName.clear();
 		textType.clear();
 		listSearch.getItems().clear();
+		notExist.setVisible(false);
+	}
+	 
+	
+	
+}
+
+@FXML
+void btnHandlerAdd(ActionEvent event) throws MinPlayerException { //Handles btn's on Add page
+	toyAdd.setVisible(false);
+	String serialNumS = txtSerialAdd.getText();
+	String name = txtNameAdd.getText();
+	String brand = txtBrndAdd.getText();
+	String priceS = txtPriceAdd.getText();
+	String countS = txtCountAdd.getText();
+	String ageS = txtAgeAdd.getText();
+	String classification = txtClassAdd.getText();
+	String material = txtMaterialAdd.getText();
+	String size = txtSizeAdd.getText();
+	String type = txtTypeAdd.getText();
+	String minPS = txtMinPAdd.getText();
+	String maxPS = txtMaxPAdd.getText();
+	String designers = txtDesignersAdd.getText();
+	if (serialNumS.matches("[a-zA-Z]+") || priceS.matches("[a-zA-Z]+") || countS.matches("[a-zA-Z]+") || ageS.matches("[a-zA-Z]+") || minPS.matches("[a-zA-Z]+") || maxPS.matches("[a-zA-Z]+")) //Validates user didn't enter any numbers
+	{
+
+	}
+	else {
+		if (serialNumS != "" && name != "" && brand !="" && priceS !="" && countS !="" && ageS !="") { //Makes sure fields aren't empty
+
+			Long serialNum = Long.parseLong(serialNumS);
+			Float price= Float.parseFloat(priceS);
+			int count = Integer.parseInt(countS);
+			int age = Integer.parseInt(ageS);
+			
+			boolean added = addToy(serialNum,name,brand,price,count,age,classification,material,size,type,minPS,maxPS,designers); //sends to method to add to txt
+			if(added == true) { //Displays item added if it is added
+				toyAdd.setVisible(true);
+			}
+		}
+		else {
+
+		}
+	}
+}
+
+@FXML
+void btnHandlerClearAdd(ActionEvent event) { //Handles the clear button in Add Page(Added After finishing everything)
+	txtSerialAdd.clear();
+	txtNameAdd.clear();
+	txtBrndAdd.clear();
+	txtPriceAdd.clear();
+	txtCountAdd.clear();
+	txtAgeAdd.clear();
+	txtClassAdd.clear();
+	txtMaterialAdd.clear();
+	txtSizeAdd.clear();
+	txtTypeAdd.clear();
+	txtMinPAdd.clear();
+	txtMaxPAdd.clear();
+	txtDesignersAdd.clear();
+}
+
+@FXML
+void btnHandlerRemove(ActionEvent event) { //Handles events in remove page
+	if (event.getSource().equals(btnSearchRemove)) { //If search is pressed
+		invalidSerialR.setVisible(false);
+		toyRemoved.setVisible(false);
+		String serialNumberString = txtSerialRemove.getText();
+		boolean found  = false;
+		if(!serialNumberString.matches("[a-zA-Z]+")) {//Makes sure no letters are in the textfield
+			if(serialNumberString != "") { //Makes sure serial txt field isn't empty
+				serialNumberString.trim();
+				long serialNum = Long.parseLong(serialNumberString);
+				found = removeToy(serialNum); //Sends to method to find item and display on listview
+			}else {
+				invalidSerialR.setVisible(true);
+			}
+			if (found != true) {
+				invalidSerialR.setVisible(true);
+			}
 		
-		
+		}else {
+			invalidSerialR.setVisible(true);
+		}
+	}
+	if (event.getSource().equals(btnClearR)) { //If clear is pressed, clears all fields
+		txtSerialRemove.clear();
+		listRemove.getItems().clear();
+		invalidSerialR.setVisible(false);
+		toyRemoved.setVisible(false);
+	}
+	if (event.getSource().equals(btnRemove)) { //If remove is pressed
+		int arrayNum = 0;
+		Toys choice = listViewSelectedR();	//Detects what object user pressed
+		if (choice != null) { //validates user has pressed a item
+			for (Toys item : toy) {
+				if (item.getSerialNumber()==choice.getSerialNumber()) {
+					arrayNum = toy.indexOf(item); //gets index of item user selected
+					break;
+					}
+				else {
+	
+				}
+				
+			}
+			toy.remove(arrayNum); //removes item
+			toyRemoved.setVisible(true);
+		}
+		saveExit(); //saves to txt file
 	}
 
 }
 
 @FXML
-void radioAction(ActionEvent event) {
+void radioAction(ActionEvent event) { //handles what fields are availible when using radio buttons in home page and any physical aspects of it
 	if(radioSN.isSelected()) {
+		notExist.setVisible(false);
 		textSN.setPromptText("Enter Type Here");
 		textName.setPromptText("");
 		textSN.setDisable(false);
@@ -181,6 +391,7 @@ void radioAction(ActionEvent event) {
 		
 	}
 	else if(radioName.isSelected()) {
+		notExist.setVisible(false);
 		textName.setPromptText("Enter Type Here");
 		textType.setPromptText("");
 		textSN.setPromptText("");
@@ -193,6 +404,7 @@ void radioAction(ActionEvent event) {
 	}
 
 	else if (radioType.isSelected()) {
+		notExist.setVisible(false);
 		textType.setPromptText("Enter Type Here");
 		textName.setPromptText("");
 		textSN.setPromptText("");
@@ -204,17 +416,54 @@ void radioAction(ActionEvent event) {
 		nameLabel.setTextFill(Color.BLACK);
 	}
 }
-
 @FXML
-void txtSearchHandler(ActionEvent event) {
+void comboHandler(ActionEvent event) { //Basically handles what fields are availible when using combo box in add toys page
 	
-
+	if (combobox.getValue() == items[0]) { //Figure
+		txtSizeAdd.setDisable(true);
+		txtMaterialAdd.setDisable(true);
+		txtMinPAdd.setDisable(true);
+		txtMaxPAdd.setDisable(true);
+		txtDesignersAdd.setDisable(true);
+		txtTypeAdd.setDisable(true);
+		txtClassAdd.setDisable(false);
+	}
+	else if (combobox.getValue() == items[1]) {//Animals
+		txtSizeAdd.setDisable(false);
+		txtMaterialAdd.setDisable(false);
+		txtMinPAdd.setDisable(true);
+		txtMaxPAdd.setDisable(true);
+		txtDesignersAdd.setDisable(true);
+		txtTypeAdd.setDisable(true);
+		txtClassAdd.setDisable(true);
+	}
+	else if (combobox.getValue() == items[2]) {//Puzzle
+		txtSizeAdd.setDisable(true);
+		txtMaterialAdd.setDisable(true);
+		txtMinPAdd.setDisable(true);
+		txtMaxPAdd.setDisable(true);
+		txtDesignersAdd.setDisable(true);
+		txtTypeAdd.setDisable(false);
+		txtClassAdd.setDisable(true);
+	}
+	else if (combobox.getValue() == items[3]) {//Board Games
+		txtSizeAdd.setDisable(true);
+		txtMaterialAdd.setDisable(true);
+		txtMinPAdd.setDisable(false);
+		txtMaxPAdd.setDisable(false);
+		txtDesignersAdd.setDisable(false);
+		txtTypeAdd.setDisable(true);
+		txtClassAdd.setDisable(true);
+	}
 }
+
+
 
 
 /**
  * This Method is responsible for searching the database for a matching serial
- * number and prompting user to purchase item
+ * number and displaying on list view
+ * @return returns true if found
  */
 public boolean searchSerial(long serialNum) {
 	boolean found = false; // Becomes true if item is found
@@ -228,15 +477,16 @@ public boolean searchSerial(long serialNum) {
 					found = true;
 					serialNum = item.getSerialNumber();
 					ObservableList<Toys> t = FXCollections.observableArrayList(item);
-					listSearch.getItems().addAll(t);	
+					listSearch.getItems().addAll(t);
+					notExist.setVisible(false);
 					return found;
+					
 				} else if (item.getSerialNumber() == serialNum && item.getAvalibleCount() == 0) {
 					break;
 				}
 			
 			if (found != true) { // If item serial num is not in arraylist, displays item doesn't exist
-				menu.doesntExist();
-				menu.promptEnterKey();
+				notExist.setVisible(true);
 			}
 			
 			exceptionLoop = false;
@@ -251,72 +501,37 @@ public boolean searchSerial(long serialNum) {
 
 /**
  * This Method is responsible for searching the database for a matching name and
- * prompting the user to purchase item
- * @return 
+ * displaying on list view
+ * @return returns true if found
  */
 private boolean searchName(String name) {
 	boolean found = false; // Becomes true once item is found
 	boolean enter = false; // Becomes true once user presses enter
 	ArrayList<Toys> nameArray = new ArrayList<>();
-	int itemCount = 0;
-	int listSize = 0;
-	int choice = 0;
 
 	for (Toys item : toy) { // This for loop is responsible for iterating through the list and adding items
 							// that contain the users input
 		if (item.getName().toLowerCase().trim().contains(name) && item.getAvalibleCount() > 0) {
 			nameArray.add(item);
-			ObservableList<Toys> t = FXCollections.observableArrayList(nameArray);
-			listSearch.getItems().addAll(t);
 			found = true;
 		}
-
 	}
-
-//	if (found != true) { // This If statement is responsible for telling user that the item they were
-//		                 // looking for was not found and going back to the search menu
-//	
-//	}
-
-//	while (enter != true) { // This loops is responsible for dealing with purchase of item and validating
-//							// proper inputs when purchasing
-//		listSize = menu.nameSearchResults(nameArray, itemCount);
+	ObservableList<Toys> t = FXCollections.observableArrayList(nameArray);
+	listSearch.getItems().addAll(t);
 	
-//
-//			choice = menu.promptPurchase(); // Prompts purchase
-//			          
-//			if (choice == listSize) { // If user input is equal to list size, goes back to main menu
-//				break;
-//			} else if (choice > listSize || choice < 0) { // If user input is larger than list size ot smaller than
-//															// the # of choices, displays error
-//				menu.validateOptionNotValid();
-//				menu.promptEnterKey();
-//			}
-//
-//			else { // If user chooses a toy to purchase, it will -1 from stock and prints purchase
-//					// was successful
-//				Toys item = nameArray.get(choice);
-//				int stock = item.getAvalibleCount();
-//				stock -= 1;
-//				item.setAvalibleCount(stock);
-//				menu.purchaseSuccessful();
-//
-//				menu.promptEnterKey(); // Asks user to press enter and breaks the while loop once done
-//				enter = true;
-//			}
+	if (found != true) { //If not found, displays not found
+		notExist.setVisible(true);
+	}
 		return found;
 	}
 
 
 /**
  * This Method is responsible for searching the database for a matching toy type
- * and prompting the user to purchase item
+ * and displaying on listview
  */
 private void searchType(String type) {
 	ArrayList<Toys> nameArray = new ArrayList<>();
-	int listSize = 0;
-	int itemCount = 0;
-	int choice = 0;
 	boolean found = false;
 	boolean enter = false; // Becomes true once user presses enter
 	for (Toys item : toy) { // Iterates through lists and uses if statements to deterine which item shows
@@ -325,7 +540,6 @@ private void searchType(String type) {
 			if (item instanceof Animals) {
 				if (item.getAvalibleCount() > 0) {
 					nameArray.add(item);
-					itemCount++;
 					found = true;
 				}
 			}
@@ -335,7 +549,6 @@ private void searchType(String type) {
 			if (item instanceof Figures) {
 				if (item.getAvalibleCount() > 0) {
 					nameArray.add(item);
-					itemCount++;
 					found = true;
 				}
 			}
@@ -345,7 +558,6 @@ private void searchType(String type) {
 			if (item instanceof Puzzles) {
 				if (item.getAvalibleCount() > 0) {
 					nameArray.add(item);
-					itemCount++;
 					found = true;
 				}
 			}
@@ -355,125 +567,116 @@ private void searchType(String type) {
 			if (item instanceof BoardGames) {
 				if (item.getAvalibleCount() > 0) {
 					nameArray.add(item);
-					itemCount++;
 					found = true;
 				}
 			}
 		}
 	}
 	if (found != true) { // If User enters a wrong input, sends back to search menu
-		menu.validateOptionNotValid();
-		enter = true;
-		menu.promptEnterKey();
+		notExist.setVisible(true);
 	}
 	ObservableList<Toys> t = FXCollections.observableArrayList(nameArray);
 	listSearch.getItems().addAll(t);
-	
-//		try {
-//			choice = menu.promptPurchase();// Prompts user which toy they want to purchase
-//			choice -= 1;
-//			listSize -= 1;
-//			if (choice == listSize) { // If choice is equal to the list size, goes back to menu
-//				break;
-//			} else if (choice > listSize || choice < 0) { // if input was larger than list size or smaller than 0,
-//															// displays invalid imput
-//				menu.validateOptionNotValid();
-//				menu.promptEnterKey();
-//			} else {// If user chooses a toy to purchase, it will -1 from stock and prints purchase
-//					// was successful
-//
-//				Toys item = nameArray.get(choice);
-//				int stock = item.getAvalibleCount();
-//				stock -= 1;
-//				item.setAvalibleCount(stock);
-//				menu.purchaseSuccessful();
-//
-//				menu.promptEnterKey();// Asks user to press enter and breaks the while loop once done
-//				enter = true;
-//			}
-//
-//		} catch (InputMismatchException mismatch) {
-//			menu.validateNumNotValid();
-//			menu.promptEnterKey();
-//		}
-
-//	}
 }
 
 /**
- * This Method is responsible for adding toys to the ArrayList based on user
- * input
- * @throws MinPlayerException makes sure minplayer is not bigger than maxplayer
+ * Adds a toy to the array list.
+ *
+ * @param serialNum      The serial number of the toy.
+ * @param name           The name of the toy.
+ * @param brand          The brand of the toy.
+ * @param price          The price of the toy.
+ * @param count          The count of the toy.
+ * @param age            The age requirement of the toy.
+ * @param classification The classification of the toy (for Figures).
+ * @param material       The material of the toy (for Animals).
+ * @param size           The size of the toy (for Animals).
+ * @param type           The type of the toy (for Puzzles).
+ * @param minPS          The minimum number of players (for BoardGames).
+ * @param maxPS          The maximum number of players (for BoardGames).
+ * @param designers      The designers of the toy (for BoardGames).
+ * @return               true if the toy is added successfully
+ * @throws MinPlayerException If the minimum number of players is larger than the maximum number of players.
  */
-private void addToy() throws MinPlayerException {
+private boolean addToy(Long serialNum, String name, String brand, float price, int count, int age, String classification, String material, String size, String type, String minPS, String maxPS, String designers ) throws MinPlayerException {
 	boolean error = true;
+	boolean allCorrect = false;
+	boolean addedToy = false;
+	int minP = 0;
+	int maxP = 0;
 	int minPlayers = 0;
 	int maxPlayers = 0;
-	long serialNum = getSerialNum();
-	String toyName = menu.prompToyName();
-	String toyBrand = menu.prompBrandName();
-	float toyPrice = getToyPrice();
-	int availability = getAvailability();
-	int age = getAge();
-	String serialNumString = Long.toString(serialNum);
-	char firstVal = serialNumString.charAt(0);
-	int firstNum = Character.getNumericValue(firstVal);
-
-	if (firstNum <= 1) { // If serial number starts with 0 or 1, toy becomes a figure
-		String figureClass = menu.promptFigureClass();
-		Toys newFigures = new Figures(serialNum, toyName, toyBrand, toyPrice, availability, age, figureClass);
-		toy.add(newFigures);
-	} else if (firstNum <= 3) {// If serial number starts with 2 or 3, toy becomes a animal and prompts for any
-								// extra characteristics of the type
-		String material = menu.promptAnimalMaterial();
-		String size = menu.promptAnimalSize();
-		Toys newAnimals = new Animals(serialNum, toyName, toyBrand, toyPrice, availability, age, material, size);
-		toy.add(newAnimals);
-	} else if (firstNum <= 6) {// If serial number starts with 4, 5 or 6, toy becomes a puzzle and prompts for
-								// any extra characteristics of the type
-		String puzzleType = menu.promptPuzzleType();
-		Toys newPuzzles = new Puzzles(serialNum, toyName, toyBrand, toyPrice, availability, age, puzzleType);
-		toy.add(newPuzzles);
-	} else if (firstNum <= 9) {// If serial number starts with 7,8 or 9, toy becomes a board game and prompts
-								// for any extra characteristics of the type
-		while (error) {
-			minPlayers = menu.promptBoardGameMinPlayers();
-			maxPlayers = menu.promptBoardGameMaxPlayers();
-			if (minPlayers > maxPlayers) {
-				throw new MinPlayerException("Min Player cannot be larger than Max Players");
-			} else {
-				error = false;
-			}
-
+	boolean serialNumC =validateSerialNum(serialNum);
+	boolean priceC = validateToyPrice (price);
+	boolean countC = validateCount(count);
+	boolean ageC = validateAge(age);
+	allCorrect = validateAll(serialNumC,priceC,countC,ageC); //Makes sure all the above are validated
+	
+	
+	if (allCorrect!=false) {
+		String serialNumString = Long.toString(serialNum);
+		char firstVal = serialNumString.charAt(0);
+		int firstNum = Character.getNumericValue(firstVal);
+	
+		if (firstNum <= 1) { // If serial number starts with 0 or 1, toy becomes a figure
+			if (classification != "");{
+				Toys newFigures = new Figures(serialNum, name, brand, price, count, age, classification);
+				toy.add(newFigures);
+				addedToy = true;
 		}
-		String designers = menu.promptBoardGameDesigners();
-		Toys newBoardGames = new BoardGames(serialNum, toyName, toyBrand, toyPrice, availability, age, minPlayers,
-				maxPlayers, designers);
-		toy.add(newBoardGames);
+		} else if (firstNum <= 3) {// If serial number starts with 2 or 3, toy becomes a animal and prompts for any
+									// extra characteristics of the type
+			if (material != ""&& size !="") {
+				Toys newAnimals = new Animals(serialNum, name, brand, price, count, age, material, size);
+				toy.add(newAnimals);
+				addedToy = true;
+			}
+		} else if (firstNum <= 6) {// If serial number starts with 4, 5 or 6, toy becomes a puzzle and prompts for
+									// any extra characteristics of the type
+			if(type != "") {
+				Toys newPuzzles = new Puzzles(serialNum, name, brand, price, count, age, type);
+				toy.add(newPuzzles);
+				addedToy = true;
+			}
+		} else if (firstNum <= 9) {// If serial number starts with 7,8 or 9, toy becomes a board game and prompts
+								// for any extra characteristics of the type
+			if(minPS != "" && maxPS != "" && designers !="") {
+				while (error) {
+					minP = Integer.parseInt(minPS);
+					maxP = Integer.parseInt(maxPS);
+					if (minPlayers > maxPlayers) {
+						throw new MinPlayerException("Min Player cannot be larger than Max Players");
+					} else {
+						error = false;
+					}
+		
+				}
+				
+				Toys newBoardGames = new BoardGames(serialNum, name, brand, price, count, age, minP,
+						maxP, designers);
+				toy.add(newBoardGames);
+				addedToy = true;
+			}
+		}
 	}
-
-	menu.toyAddedMessage();
-	menu.promptEnterKey();
+	toyAdd.setVisible(false);
+	saveExit();
+	return addedToy;
 }
 
 /**
- * This method is responsible for prompting and validating serial number when
+ * This method is responsible for  validating serial number when
  * adding toys
  * 
- * @return returns serial number user enterd
+ * @return returns boolean if validated
  */
-private long getSerialNum() {
-
-	long serialNum = 0;
-
+private Boolean validateSerialNum(Long serialNum) {
+	boolean correct = true;
 	try {
-		// prompt to enter a serial number
-		serialNum = menu.promptSerialNum();
+		
 
 		// validate length of the serial number
 		while (String.valueOf(serialNum).length() != 10) { // Validates that serial num is 10 digits
-			menu.validateSNLength();
-			serialNum = menu.promptSerialNum();
 		}
 
 		// check if the serial number exists
@@ -482,145 +685,120 @@ private long getSerialNum() {
 			serialNumExists = false;
 			for (Toys item : toy) { // Validates that Serial number doesn't exist already
 				if (item.getSerialNumber() == serialNum) {
-					menu.validateExistingSN();
-					serialNum = menu.promptSerialNum();
-					serialNumExists = true;
 					break;
 				}
 			}
 		}
 	} catch (InputMismatchException e) {
-		menu.validateSN();
-		return getSerialNum();
+		return validateSerialNum(serialNum);
 	}
 
-	return serialNum;
+	return correct;
 }
 
 /**
- * This method is responsoble for prompting and validating toy prices based on
+ * This method is responsoble for validating toy prices based on
  * user input
  * 
- * @return returns toy price user entered
+ * @return returns boolean if validated
  */
-private float getToyPrice() {
-	float toyPrice = 0;
+private boolean validateToyPrice(float price) {
+	boolean correct = true;
 	try {
-		toyPrice = menu.promptToyPrice();
-		if (toyPrice <= 0) { // If user enters toy price less or equal to 0, prints error message
-			menu.validateNegativeNum();
-			return getToyPrice();
+		if (price <= 0) { // If user enters toy price less or equal to 0, prints error message
+			correct = false;
+			return correct;
 		}
 	} catch (InputMismatchException e) {
-		menu.validateEnterNum();
-		return getToyPrice();
+		correct = false;
+		return validateToyPrice(price);
 	}
-	return toyPrice;
+	return correct;
 }
 
 /**
- * This method is responsoble for prompting and validating how much avalible
+ * This method is responsoble for   validating how much avalible
  * stock a toy has based on user input
  * 
- * @return returns availible stock user entered
+ * @return returns boolean if validated
  */
-private int getAvailability() {
-	int toyAvailability = 0;
+private boolean validateCount(int count) {
+	boolean correct = true;
 	try {
-		toyAvailability = menu.promptAvailability();
-		if (toyAvailability <= 0) { // If user enters availible stock less or equal to 0, prints out error message
-			menu.validateNegativeNum();
-			return getAvailability();
+		if (count <= 0) { // If user enters availible stock less or equal to 0, prints out error message
+			correct = false;
+			return correct;
 		}
 	} catch (InputMismatchException e) {
-		menu.validateEnterNum();
-		return getAvailability();
+		correct = false;
+		return validateCount(count);
 	}
-	return toyAvailability;
+	return correct;
 }
 
 /**
- * This method is responsible for prompting and validating minimum age of toy
+ * This method is responsible for validating minimum age of toy
  * based on user input
  * 
- * @return returns min age based on user input
+ * @return returns boolean if it is validated
  */
-private int getAge() {
-	int minAge = 0;
+private boolean validateAge(int age) {
+	boolean correct = true;
 	try {
-		minAge = menu.promptAge();
-		if (minAge <= 0) { // If user enters min age less than 0, prints out error message
-			menu.validateNegativeNum();
-			return getAvailability();
-		}
+		if (age <= 0) { // If user enters min age less than 0, prints out error message
+			correct = false;
+			return correct;
+		}	
+		
 	} catch (InputMismatchException e) {
-		menu.validateEnterNum();
-		minAge = menu.promptAge();
+		correct = false;
+		return validateAge(age);
 	}
-	return minAge;
+	return correct;
+}
+/**
+ * Validates all the given boolean conditions and returns true if all are true.
+ * 
+ * @param serialNumC a boolean representing the serial number condition
+ * @param priceC a boolean representing the price condition
+ * @param countC a boolean representing the count condition
+ * @param ageC a boolean representing the age condition
+ * @return true if all the conditions are true, otherwise false
+ */
+private boolean validateAll(boolean serialNumC, boolean priceC, boolean countC, boolean ageC) { 
+	boolean correct = false;
+	if (serialNumC == true && priceC == true && countC ==true && ageC ==true) {
+		correct = true;
+	}
+	return correct;
+	
 }
 
 /**
- * This method is responsible for removing toy from ArrayList
+ * This method is responsible for displaying item in arrayList
  */
-private void removeToy() {
-	long serialNum = getSerialNumRemoval();
+private boolean removeToy(long serialNum) {
 	boolean found = false; // Becomes true if item is found
-	boolean remove = false; // Becomes true if user decides to remove toy
-	int arrayNum = 0;
 
 	for (Toys item : toy) {
 		if (item.getSerialNumber() == serialNum) {
 			found = true;
-			menu.serialSearchRemoval(item.toString());
-			char choice = menu.promptRemoval();
-			switch (choice) {
-			case 'y': // Gets index of item to be removed later
-				arrayNum = toy.indexOf(item);
-				remove = true;
-				menu.toyRemovedMessage();
-
-			case 'n': // Goes back to main Menu
-				break;
-			default:
-				menu.validateOptionNotValid();
-				break;
+			ObservableList<Toys> e = FXCollections.observableArrayList(item); //Displays item
+			listRemove.getItems().addAll(e);
 			}
 		}
-	}
-	if (remove) { // Removes item from ArrayList
-		toy.remove(arrayNum);
-	}
+	
+	
 	if (found != true) {
-		menu.doesntExist();
+		invalidSerialR.setVisible(true);
 	}
+	return found;
 }
 
-/**
- * Prompts user for Serial Number and validates/catches exceptions for removal of toy
- * @return serialNum
- */
-private long getSerialNumRemoval() {
-	long serialNum = 0;
-	try {
-		// prompt to enter a serial number
-		serialNum = menu.promptSerialNum();
 
-		// validate length of the serial number
-		while (String.valueOf(serialNum).length() != 10) { // Validates that serial num is 10 digits
-			menu.validateSNLength();
-			serialNum = menu.promptSerialNum();
-		}
-	} catch (InputMismatchException e) {
-		menu.validateSN();
-		return getSerialNumRemoval();
-	}
-	return serialNum;
-}
 
 /**
- * This Method is responsible for writing the arraylist to the txt file (save
- * and exitting)
+ * This Method is responsible for writing the arraylist to the txt file (saving)
  */
 private void saveExit() {
 	File txt = new File(FILE_PATH);
@@ -693,6 +871,7 @@ private void loadData() {
 
 			}
 			fileReader.close();
+			
 		}
 
 		// CATCH HERE
@@ -702,4 +881,25 @@ private void loadData() {
 
 		}
 	}
+
+
+
+@Override
+public void initialize(URL arg0, ResourceBundle arg1) {
+	combobox.getItems().addAll(items);
+	combobox.getSelectionModel().select(0);
+	txtSizeAdd.setDisable(true);
+	txtMaterialAdd.setDisable(true);
+	txtMinPAdd.setDisable(true);
+	txtMaxPAdd.setDisable(true);
+	txtDesignersAdd.setDisable(true);
+	txtTypeAdd.setDisable(true);
+	txtClassAdd.setDisable(false);
+	toyAdd.setVisible(false);
+
+	
+}
+
+
+
 }
